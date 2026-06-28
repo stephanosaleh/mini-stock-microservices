@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Controller()
 export class ApiGatewayController {
@@ -37,5 +38,14 @@ export class ApiGatewayController {
   @Post('auth/login')
   login(@Body() body: any) {
     return this.authClient.send({ cmd: 'auth_login' }, body);
+  }
+
+  @Get('auth/profile')
+  @UseGuards(JwtAuthGuard)
+  profile(@Req() req: Request) {
+    return {
+      message: 'This is a protected route',
+      user: req['user'],
+    };
   }
 }

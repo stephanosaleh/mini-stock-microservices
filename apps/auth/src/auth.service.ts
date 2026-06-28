@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
@@ -53,10 +53,16 @@ export class AuthService {
       throw new BadRequestException('Invalid Credentials!');
     }
 
-    const token = await this.jwtService.signAsync({
-      sub: user._id,
-      email: user.email,
-    });
+    const token = await this.jwtService.signAsync(
+      {
+        sub: user._id.toString(),
+        email: user.email,
+      },
+      {
+        secret: 'debug_secret',
+        expiresIn: '1d',
+      },
+    );
 
     return {
       message: 'User successfully logged in!',

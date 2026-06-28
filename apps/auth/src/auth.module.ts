@@ -12,7 +12,7 @@ import { User, UserSchema } from './schemas/user.schema';
     MongooseModule.forRoot(process.env.AUTH_MONGO_URI as string),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET || 'dev_secret',
       signOptions: {
         expiresIn: '1d',
       },

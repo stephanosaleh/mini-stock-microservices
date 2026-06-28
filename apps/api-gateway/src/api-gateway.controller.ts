@@ -1,4 +1,4 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 @Controller()
@@ -27,5 +27,15 @@ export class ApiGatewayController {
   @Get('stocks/hello')
   stocksHello() {
     return this.stocksClient.send({ cmd: 'stocks_hello' }, {});
+  }
+
+  @Post('auth/register')
+  register(@Body() body: any) {
+    return this.authClient.send({ cmd: 'auth_register' }, body);
+  }
+
+  @Post('auth/login')
+  login(@Body() body: any) {
+    return this.authClient.send({ cmd: 'auth_login' }, body);
   }
 }
